@@ -5,26 +5,28 @@ import {
   faComments,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import socketIOClient from 'socket.io-client';
+import io from 'socket.io-client';
 import Message from './Message';
 
-const ENDPOINT = 'http://127.0.0.1:8080/socket.io/';
+// const ENDPOINT = 'http://127.0.0.1:8080/socket.io/';
+// const API_URL = 'http://localhost:5000';
+
+const socket = io.connect('ws://localhost:8080', {
+  transports: ['websocket'],
+});
 
 const Chatbot = () => {
   const [showChatBot, setShowChatBot] = useState(false);
   const [inputMsg, setInputMsg] = useState('');
-
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-
-    socket.on('reply', (data) => {
+    socket.on('receive', (response) => {
+      console.log('✅', response);
       setMessages((m) => [
         ...m,
-        { timestamp: data.timestamp, message: data, sentBy: 'bot' },
+        { timestamp: Date.now(), message: response.text, sentBy: 'bot' },
       ]);
-      console.log('✅', data);
       document
         .getElementById('scroll-view')
         .scrollIntoView({ behavior: 'smooth' });
@@ -42,7 +44,6 @@ const Chatbot = () => {
     if (inputMsg === '') {
       return;
     }
-    const socket = socketIOClient(ENDPOINT);
 
     setMessages((m) => [
       ...m,
@@ -53,7 +54,7 @@ const Chatbot = () => {
       .getElementById('scroll-view')
       .scrollIntoView({ behavior: 'smooth' });
 
-    socket.emit('send', inputMsg);
+    socket.emit('receive', { text: inputMsg, guid: 'v6r4luai4vfn0f7bi8afbd3' });
   };
 
   return (
@@ -82,7 +83,7 @@ const Chatbot = () => {
         </header>
         <div className="chat" id="chat">
           {messages.map((m, idx) => (
-            <Message start={m.sentBy === 'bot' ? 'left' : 'right'}>
+            <Message key={idx} start={m.sentBy === 'bot' ? 'left' : 'right'}>
               {m.message}
             </Message>
           ))}
@@ -95,7 +96,7 @@ const Chatbot = () => {
             value={inputMsg}
             onChange={(e) => setInputMsg(e.target.value)}
           />
-          <button type="submit" class="send">
+          <button type="submit" className="send">
             <FontAwesomeIcon icon={faPaperPlane} />
           </button>
         </form>
