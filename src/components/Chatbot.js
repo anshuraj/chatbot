@@ -15,6 +15,8 @@ const socket = io.connect('ws://localhost:8080', {
   transports: ['websocket'],
 });
 
+const notificationTune = new Audio('/tune.mp3');
+
 const Chatbot = () => {
   const [showChatBot, setShowChatBot] = useState(false);
   const [inputMsg, setInputMsg] = useState('');
@@ -27,6 +29,7 @@ const Chatbot = () => {
         ...m,
         { timestamp: Date.now(), message: response.text, sentBy: 'bot' },
       ]);
+      notificationTune.play();
       document
         .getElementById('scroll-view')
         .scrollIntoView({ behavior: 'smooth' });
