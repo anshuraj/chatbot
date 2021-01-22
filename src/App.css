@@ -61,7 +61,7 @@
 
 .chatbot-body {
   height: 500px;
-  width: 300px;
+  width: 350px;
   background: white;
 
   position: absolute;
@@ -153,6 +153,8 @@ header .close {
   padding: 10px;
   margin-bottom: 20px;
   background-color: white;
+  width: 95%;
+  overflow-wrap: break-word;
 }
 
 .message-wrapper.left .message {
