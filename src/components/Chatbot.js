@@ -53,9 +53,11 @@ const Chatbot = () => {
       { timestamp: Date.now(), message: inputMsg, sentBy: 'user' },
     ]);
     setInputMsg('');
-    document
-      .getElementById('scroll-view')
-      .scrollIntoView({ behavior: 'smooth' });
+
+    const scrollView = document.getElementById('scroll-view');
+    scrollView.style.height = '65px';
+    scrollView.scrollIntoView({ behavior: 'smooth' });
+    scrollView.style.height = '0';
 
     socket.emit('receive', { text: inputMsg, guid: 'v6r4luai4vfn0f7bi8afbd3' });
   };
