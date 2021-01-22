@@ -136,4 +136,28 @@ const Chatbot = () => {
   );
 };
 
+const Greeting2 = () => (
+  <span>
+    Here are few list of things you can do:
+    <br />
+    Check you payment status
+    <br />
+    Check your success rate
+    <br />
+    Last few transactions
+  </span>
+);
+
+const Greeting1 = () => (
+  <span>
+    Hi there 👋
+    <br />
+    I'm the VA Razor,
+    <br />
+    The Worry Erasor,
+    <br />
+    Ask me anything you like.
+  </span>
+);
+
 export default Chatbot;
