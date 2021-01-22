@@ -9,6 +9,8 @@ import io from 'socket.io-client';
 import Message from './Message';
 import Loader from './Loader';
 
+import vaLogo from './logo.svg';
+
 const socket = io.connect('ws://localhost:8080', {
   transports: ['websocket'],
 });
@@ -111,7 +113,9 @@ const Chatbot = () => {
         }`}
       >
         <header>
-          <h4>RazorVA</h4>
+          <h4 className="heading">
+            <img src={vaLogo} alt="" /> RazorVA
+          </h4>
           <span className="close" onClick={() => setShowChatBot(false)}>
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </span>
