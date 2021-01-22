@@ -8,9 +8,6 @@ import {
 import io from 'socket.io-client';
 import Message from './Message';
 
-// const ENDPOINT = 'http://127.0.0.1:8080/socket.io/';
-// const API_URL = 'http://localhost:5000';
-
 const socket = io.connect('ws://localhost:8080', {
   transports: ['websocket'],
 });
@@ -22,7 +19,35 @@ const Chatbot = () => {
   const [inputMsg, setInputMsg] = useState('');
   const [messages, setMessages] = useState([]);
 
+  // Greeting user
   useEffect(() => {
+    setTimeout(
+      () =>
+        setMessages((m) => [
+          ...m,
+          {
+            message: <Greeting1 />,
+            sentBy: 'bot',
+            timestamp: Date.now(),
+          },
+        ]),
+      1000
+    );
+
+    setTimeout(
+      () =>
+        setMessages((m) => [
+          ...m,
+          {
+            message: <Greeting2 />,
+            sentBy: 'bot',
+            timestamp: Date.now(),
+          },
+        ]),
+      2000
+    );
+
+    // Listening on socket event
     socket.on('receive', (response) => {
       console.log('✅', response);
       setMessages((m) => [
