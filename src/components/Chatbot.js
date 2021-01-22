@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
 import Message from './Message';
+import Loader from './Loader';
 
 const socket = io.connect('ws://localhost:8080', {
   transports: ['websocket'],
@@ -18,6 +19,7 @@ const Chatbot = () => {
   const [showChatBot, setShowChatBot] = useState(false);
   const [inputMsg, setInputMsg] = useState('');
   const [messages, setMessages] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
 
   // Greeting user
   useEffect(() => {
@@ -50,6 +52,8 @@ const Chatbot = () => {
     // Listening on socket event
     socket.on('receive', (response) => {
       console.log('✅', response);
+      setShowLoader(false);
+
       setMessages((m) => [
         ...m,
         { timestamp: Date.now(), message: response.text, sentBy: 'bot' },
@@ -80,11 +84,12 @@ const Chatbot = () => {
     setInputMsg('');
 
     const scrollView = document.getElementById('scroll-view');
-    scrollView.style.height = '65px';
+    scrollView.style.height = '110px';
     scrollView.scrollIntoView({ behavior: 'smooth' });
     scrollView.style.height = '0';
 
     socket.emit('receive', { text: inputMsg, guid: 'v6r4luai4vfn0f7bi8afbd3' });
+    setShowLoader(true);
   };
 
   return (
@@ -106,17 +111,24 @@ const Chatbot = () => {
         }`}
       >
         <header>
-          <h4>Chatbot</h4>
+          <h4>RazorVA</h4>
           <span className="close" onClick={() => setShowChatBot(false)}>
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </span>
         </header>
         <div className="chat" id="chat">
           {messages.map((m, idx) => (
-            <Message key={idx} start={m.sentBy === 'bot' ? 'left' : 'right'}>
+            <Message
+              key={idx}
+              start={m.sentBy === 'bot' ? 'left' : 'right'}
+              timestamp={m.timestamp}
+            >
               {m.message}
             </Message>
           ))}
+
+          {showLoader && <Loader />}
+
           <div id="scroll-view"></div>
         </div>
 
@@ -124,13 +136,14 @@ const Chatbot = () => {
           <input
             placeholder="Type your query here"
             value={inputMsg}
+            autoFocus={true}
             onChange={(e) => setInputMsg(e.target.value)}
           />
           <button type="submit" className="send">
             <FontAwesomeIcon icon={faPaperPlane} />
           </button>
         </form>
-        <div className="swag">Powered by Razorbot</div>
+        <div className="swag">Powered by RazorVA</div>
       </div>
     </div>
   );
